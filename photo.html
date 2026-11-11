@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://lh3.googleusercontent.com; connect-src https://lh3.googleusercontent.com; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>靑春의 순간 · 사진 받기</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Poor+Story&display=swap" rel="stylesheet">
+<style>
+:root{--rose:#ffced8;--cream:#fff4de;--ink:#4a2a33;--edge:#e9a8b6}
+body{margin:0;min-height:100dvh;background:var(--cream);color:var(--ink);font-family:"Poor Story",system-ui;font-size:20px;line-height:1.45;text-align:center;padding:20px 16px 32px;box-sizing:border-box}
+h1{font-weight:400;font-size:44px;margin:0 0 12px}
+img{display:block;width:min(100%,420px);margin:0 auto 18px;background:#fff;box-shadow:0 10px 26px rgba(74,42,51,.3)}
+a,button{display:inline-block;font:inherit;font-size:28px;color:var(--ink);background:var(--rose);border:3px solid var(--ink);border-radius:14px;box-shadow:0 6px 0 var(--edge);padding:.55em 1.3em;text-decoration:none;cursor:pointer}
+p{margin:16px auto 0;max-width:24em}
+</style>
+</head>
+<body>
+<h1>靑春의 순간</h1>
+<img id="pic" alt="네 컷 사진">
+<button id="save">사진 저장하기</button>
+<p id="msg">저장이 안 되면 사진을 길게 눌러 저장하세요.<br>24시간 뒤에는 사진이 사라집니다.</p>
+<script src="photo.js"></script>
+</body>
+</html>

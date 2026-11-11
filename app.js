@@ -177,8 +177,6 @@ async function shootAll() {
   }
   stopCamera();
   $('hint').textContent = ''; $('go').disabled = false;
-  const chips = $('chips'); chips.innerHTML = '';
-  FRAMES.forEach(f => chips.append(frameButton(f, '', false)));
   show('done'); pick(frame); bumpIdle();
 }
 
@@ -198,7 +196,7 @@ function buildSheet() {
 
 function reset() {
   clearTimeout(idle); shots = []; uploaded = {}; sheetUrl = ''; $('msgIn').value = '';
-  $('sheet').removeAttribute('src'); $('print').removeAttribute('src'); $('chips').innerHTML = ''; $('msg').textContent = '';
+  $('sheet').removeAttribute('src'); $('print').removeAttribute('src'); $('msg').textContent = '';
   if ($('qrBox').open) $('qrBox').close();
   show('choose'); buildChoose();
 }
@@ -210,14 +208,15 @@ function bumpIdle() {
 async function showQr() {
   if (!CONFIG.uploadUrl) { $('msg').textContent = 'QR 서버가 아직 연결되지 않았습니다. 선생님께 알려 주세요.'; return; }
   const btn = $('qrBtn'); btn.disabled = true; $('msg').textContent = '사진을 올리는 중입니다.';
-  const key = frame.id + '|' + $('msgIn').value.trim();   // 틀이나 문구가 바뀌면 다시 올린다
+  const key = $('msgIn').value.trim();   // 문구가 바뀌면 다시 올린다
   try {
     if (!uploaded[key]) {
       // Content-Type을 지정하지 않아야 Apps Script가 CORS로 막지 않는다
       const r = await fetch(CONFIG.uploadUrl, {method: 'POST', body: JSON.stringify({code: CONFIG.uploadCode, image: sheetUrl.split(',')[1]})});
       const d = await r.json();
       if (!d.url) throw new Error(d.error || 'no url');   // busy = 1분 업로드 한도 초과
-      uploaded[key] = d.url;
+      // QR은 Drive 대신 우리 받기 페이지로: Drive 앱이 가로채지 않고 사진이 바로 보인다
+      uploaded[key] = new URL('photo.html#' + d.url.match(/id=([\w-]+)/)[1], location.href).href;
     }
     const q = qrcode(0, 'M'); q.addData(uploaded[key]); q.make();
     $('qr').innerHTML = q.createSvgTag({cellSize: 6, margin: 2, scalable: true});

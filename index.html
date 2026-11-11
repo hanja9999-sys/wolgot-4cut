@@ -6,7 +6,7 @@
 <!-- 보안: 스크립트는 이 사이트 파일만 실행하고, 사진은 QR 서버(Apps Script)로만 보낼 수 있다 -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
-<title>네 컷 찍자</title>
+<title>靑春의 순간</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,10 +68,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .panel{display:flex;flex-direction:column;gap:12px;min-width:0;max-width:520px;flex:1}
 .panel h2{font-size:clamp(46px,9vh,76px)}
 .panel p{margin:0}
-.chips{display:flex;gap:10px;overflow-x:auto;padding:6px 2px 8px;scrollbar-width:none}
-.chips button{flex:none;padding:0;position:relative}
-.chips canvas{display:block;height:clamp(110px,20vh,170px);width:auto}
-.chips .on canvas{outline:4px solid var(--ink);outline-offset:2px}
 .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 .row .cta{flex:1 1 100%}
 .row .plain{flex:1}
@@ -90,8 +86,7 @@ dialog .plain{background:var(--rose)}
   #sheet{height:auto;width:min(74vw,calc(48dvh*var(--paper)));max-width:none}
   .panel{flex:none;width:100%}
   .panel>p:not(#msg){display:none}
-  .chips canvas{height:96px}
-  .panel h2{display:none}
+    .panel h2{display:none}
   #shoot{flex-direction:column}
   .taken{flex-direction:row}
   .taken div{width:calc((100vw - 84px)/4);max-width:150px}
@@ -108,7 +103,7 @@ dialog .plain{background:var(--rose)}
 <body>
 
 <section id="choose" class="screen">
-  <header><h1>네 컷 찍자</h1><p>마음에 드는 틀을 골라 주세요.</p></header>
+  <header><h1>靑春의 순간</h1><p>마음에 드는 틀을 골라 주세요.</p></header>
   <div class="line" id="line"><div class="rope" id="rope"></div></div>
   <div class="foot">
     <small>사진은 이 태블릿에 저장되지 않습니다. QR을 만들 때만 선생님 드라이브에 올라가고, 24시간 뒤 자동으로 지워집니다.</small>
@@ -130,8 +125,6 @@ dialog .plain{background:var(--rose)}
   <img id="sheet" alt="완성된 네 컷 사진">
   <div class="panel">
     <h2>완성!</h2>
-    <p>틀은 지금 바꿔도 됩니다.</p>
-    <div class="chips" id="chips"></div>
     <label class="field"><span id="msgWhere">위쪽 문구</span><input id="msgIn" maxlength="16" autocomplete="off" enterkeyhint="done"></label>
     <div class="row">
       <button class="cta" id="qrBtn">QR로 받기</button>
@@ -149,7 +142,7 @@ dialog .plain{background:var(--rose)}
 <dialog id="qrBox">
   <h2>휴대폰 카메라로 비추세요</h2>
   <div id="qr"></div>
-  <p>사진이 바로 내려받아집니다. 24시간 뒤에는 링크가 사라집니다.</p>
+  <p>사진 받기 페이지가 열립니다. 24시간 뒤에는 사진이 사라집니다.</p>
   <button class="plain" id="qrClose">닫기</button>
 </dialog>
 
