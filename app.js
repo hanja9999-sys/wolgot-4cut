@@ -17,19 +17,19 @@ const W = px(PAPER.w), H = px(PAPER.h), FONT = '"Poor Story",system-ui';
 // ── 틀: 좌표는 틀 그림의 픽셀 그대로 ──
 // slots = 왼쪽 줄 4칸(테두리 안쪽 흰 부분), dx = 오른쪽 줄까지 거리
 // msg·date = 글자 자리(x, y는 가운데. align:'left'면 x가 왼쪽 끝), w = 최대 폭. 두 줄에 똑같이 찍힌다
-const GRID = {
-  slots: [374, 704, 1034, 1364].map(y => [104, y, 503, 303]), r: 10, dx: 566,
-  msg: {x: 355, y: 275, w: 470, size: 66}, date: {x: 355, y: 1757, w: 470, size: 56},
+// 사진관 네 컷 기본형(make_frames.py로 그림): 칸은 왼쪽 줄 기준, 오른쪽 줄은 +638
+const STRIP = {
+  slots: [360, 712, 1064, 1416].map(y => [44, y, 550, 330]), r: 22, dx: 638,
+  msg: {x: 319, y: 200, w: 420, size: 60}, date: {x: 319, y: 1890, w: 420, size: 52},
 };
 const FRAMES = [
   {id: 'ai', name: '월곶중 AI', art: 'frames/ai_wolgot.png', ink: '#1d3f8f',
     slots: [466, 746, 1024, 1302].map(y => [105, y, 488, 250]), r: 12, dx: 595,
     date: {x: 106, y: 1634, w: 325, size: 41, align: 'left'},
     msg: {x: 106, y: 1687, w: 325, size: 38, align: 'left'}, msgWhere: '아래', msgDefault: '월곶중학교와 함께해요!'},
-  {id: 'purple', name: '라벤더', art: 'frames/purple.png', ink: '#4e2d5f', ...GRID},
-  {id: 'cream', name: '크림 하늘', art: 'frames/cream_blue.png', ink: '#32475e', ...GRID},
-  {id: 'pink', name: '핑크', art: 'frames/pink.png', ink: '#7a4255', ...GRID},
-  {id: 'gray', name: '화이트', art: 'frames/white_gray.png', ink: '#2c3d50', ...GRID},
+  {id: 'black', name: '블랙 클래식', art: 'frames/black.jpg', ink: '#ffffff', ...STRIP},
+  {id: 'checker', name: '레트로 체커', art: 'frames/checker.jpg', ink: '#3b2477', ...STRIP},
+  {id: 'heart', name: '하트 반짝', art: 'frames/heart.jpg', ink: '#c2185b', ...STRIP},
   // ChatGPT 콜라주(2026-11-11)에서 잘라 비율 그대로 넣은 틀. 문구는 위 여백, 날짜는 아래 여백
   {id: 'comic', name: '베스트 프렌즈', art: 'frames/comic.jpg', ink: '#222222',
     slots: [564, 810, 1054, 1295].map(y => [146, y, 406, 216]), r: 14, dx: 589,
