@@ -12,6 +12,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poor+Story&display=swap" rel="stylesheet">
+<!-- Poor Story에는 한자가 없어 제목의 靑春 두 글자만 명조로 받는다 -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&text=%E9%9D%91%E6%98%A5&display=swap" rel="stylesheet">
 <script src="qrcode.js"></script>
 <style>
 /* 팔레트 4색은 모두 밝아서 글자·선택 표시용 --ink와 버튼 그림자용 --edge만 더했다 */
@@ -19,6 +21,7 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;background:var(--cream);color:var(--ink);font-family:"Poor Story",system-ui;font-weight:400;font-style:normal;font-size:21px;line-height:1.45;overscroll-behavior:none;touch-action:manipulation;user-select:none;-webkit-user-select:none}
 h1,h2{font-weight:400;line-height:1.05;margin:0}
+h1{font-family:"Poor Story","Noto Serif KR",serif}
 [hidden]{display:none!important}
 .screen{height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
