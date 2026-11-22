@@ -6,7 +6,7 @@
 <!-- 보안: 스크립트는 이 사이트 파일만 실행하고, 사진은 QR 서버(Apps Script)로만 보낼 수 있다 -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob:; media-src 'self' blob:; connect-src https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#f9f7f7">
 <title>靑春의 순간</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -20,10 +20,11 @@
 <script src="qrcode.js"></script>
 <style>
 :root{
-  --blue:#3182f6;--blue-press:#1b64da;--blue-soft:#e8f3ff;
-  --bg:#f2f4f6;--card:#fff;--line:#e5e8eb;
-  --t1:#191f28;--t2:#4e5968;--t3:#8b95a1;
-  --dark:#101318;--dark2:#202632;
+  /* colorhunt f9f7f7·dbe2ef·3f72af·112d4e */
+  --blue:#3f72af;--blue-press:#112d4e;--blue-soft:#dbe2ef;
+  --bg:#f9f7f7;--card:#fff;--line:#dbe2ef;
+  --t1:#112d4e;--t2:#4a6283;--t3:#8394ab;
+  --dark:#112d4e;--dark2:#1f4170;
   --r:20px;--ease:cubic-bezier(.2,.8,.2,1)
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -39,14 +40,14 @@ button:active{transform:scale(.97)}
 /* 버튼 3단: 파랑(주) · 회색(보조) · 글자(약) */
 .cta{font-size:20px;font-weight:700;line-height:1;background:var(--blue);color:#fff;padding:20px 28px;border-radius:16px;white-space:nowrap}
 .cta:hover{background:var(--blue-press)}
-.cta[disabled]{background:#b0d1fb}
-.plain{font-size:17px;font-weight:600;line-height:1;background:var(--bg);color:var(--t2);padding:17px 18px;border-radius:14px}
-.plain:hover{background:var(--line)}
+.cta[disabled]{background:#9fb6d6}
+.plain{font-size:17px;font-weight:600;line-height:1;background:var(--blue-soft);color:var(--blue-press);padding:17px 18px;border-radius:14px}
+.plain:hover{background:#cad4e6}
 .quiet{font-size:16px;font-weight:600;color:var(--t3);padding:12px 14px;border-radius:12px}
-.quiet:hover{background:var(--bg);color:var(--t2)}
+.quiet:hover{background:var(--blue-soft);color:var(--t2)}
 
 /* 고르기 */
-#choose{background:var(--card)}
+#choose{background:var(--bg)}
 #choose header{padding:clamp(22px,5vh,48px) clamp(24px,5vw,56px) 0}
 .eyebrow{display:inline-block;font-size:15px;font-weight:700;color:var(--blue);background:var(--blue-soft);padding:6px 12px;border-radius:999px;margin-bottom:12px}
 #choose h1{font-size:clamp(34px,6.4vh,52px)}
@@ -54,13 +55,13 @@ button:active{transform:scale(.97)}
 #choose header p{margin:6px 0 0;font-size:clamp(17px,2.4vh,20px);color:var(--t2)}
 .line{flex:1;min-height:0;margin-top:clamp(16px,3vh,30px);overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:6px clamp(24px,5vw,56px) 10px;display:flex;gap:clamp(14px,2vw,22px);scroll-snap-type:x proximity;scroll-padding:0 clamp(24px,5vw,56px)}
 .line::-webkit-scrollbar{display:none}
-.strip{flex:none;height:100%;padding:12px 12px 0;border-radius:var(--r);background:var(--bg);display:flex;flex-direction:column;align-items:center;position:relative;scroll-snap-align:start;box-shadow:inset 0 0 0 0 var(--blue);transition:box-shadow .2s var(--ease),background-color .2s,transform .15s var(--ease)}
-.strip canvas{display:block;height:calc(100% - 52px);width:auto;border-radius:8px;box-shadow:0 4px 14px rgba(0,27,55,.12)}
+.strip{flex:none;height:100%;padding:12px 12px 0;border-radius:var(--r);background:var(--card);display:flex;flex-direction:column;align-items:center;position:relative;scroll-snap-align:start;box-shadow:inset 0 0 0 1px var(--line);transition:box-shadow .2s var(--ease),background-color .2s,transform .15s var(--ease)}
+.strip canvas{display:block;height:calc(100% - 52px);width:auto;border-radius:8px;box-shadow:0 4px 14px rgba(17,45,78,.14)}
 .strip span{display:block;font-size:16px;font-weight:600;color:var(--t2);line-height:52px;white-space:nowrap}
 .strip.on{background:var(--blue-soft);box-shadow:inset 0 0 0 3px var(--blue)}
 .strip.on span{color:var(--blue);font-weight:700}
-.strip.on::after{content:"";position:absolute;top:20px;right:20px;width:30px;height:30px;border-radius:50%;background:var(--blue) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px no-repeat;box-shadow:0 2px 8px rgba(49,130,246,.4)}
-.foot{padding:14px clamp(24px,5vw,56px) max(18px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;gap:24px;border-top:1px solid var(--line)}
+.strip.on::after{content:"";position:absolute;top:20px;right:20px;width:30px;height:30px;border-radius:50%;background:var(--blue) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px no-repeat;box-shadow:0 2px 8px rgba(63,114,175,.4)}
+.foot{padding:14px clamp(24px,5vw,56px) max(18px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;gap:24px;border-top:1px solid var(--line);background:var(--card)}
 .foot small{font-size:15px;color:var(--t3);max-width:34em;display:flex;gap:8px;align-items:flex-start}
 .foot small::before{content:"🔒";font-size:14px;line-height:1.6}
 .foot .cta{min-width:min(340px,40vw)}
@@ -68,7 +69,7 @@ button:active{transform:scale(.97)}
 /* 찍기: 미리보기 비율 = 인쇄되는 칸 비율 */
 #shoot{flex-direction:row;align-items:center;justify-content:center;gap:clamp(14px,2vw,28px);padding:16px;background:var(--dark)}
 .taken{display:flex;flex-direction:column;gap:10px;flex:none}
-.taken div{width:clamp(84px,13vw,150px);aspect-ratio:var(--cell);background:var(--dark2);border-radius:12px;display:grid;place-items:center;font-size:22px;font-weight:700;color:#5b6573;overflow:hidden;transition:box-shadow .2s}
+.taken div{width:clamp(84px,13vw,150px);aspect-ratio:var(--cell);background:var(--dark2);border-radius:12px;display:grid;place-items:center;font-size:22px;font-weight:700;color:#7f9bc0;overflow:hidden;transition:box-shadow .2s}
 .taken div:has(canvas){box-shadow:0 0 0 2px var(--blue)}
 .taken canvas{width:100%;height:100%;display:block;animation:in .3s var(--ease)}
 .stage{position:relative;width:min(calc(100vw - 220px),calc((100dvh - 32px)*var(--cell)));aspect-ratio:var(--cell);background:#000;border-radius:24px;overflow:hidden}
@@ -79,12 +80,12 @@ button:active{transform:scale(.97)}
 #flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
 #flash.go{animation:fl .35s ease-out}
 @keyframes fl{0%{opacity:1}100%{opacity:0}}
-#hint{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);font-size:clamp(18px,2.8vh,22px);font-weight:700;color:#fff;background:rgba(16,19,24,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 20px;border-radius:999px;white-space:nowrap}
+#hint{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);font-size:clamp(18px,2.8vh,22px);font-weight:700;color:#fff;background:rgba(17,45,78,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 20px;border-radius:999px;white-space:nowrap}
 #hint:empty{display:none}
 
 /* 완성 */
-#done{background:var(--bg);flex-direction:row;gap:clamp(20px,3vw,40px);padding:clamp(16px,3vh,28px) clamp(20px,3vw,40px);align-items:center;justify-content:center}
-#sheet{height:calc(100dvh - 56px);max-width:52vw;aspect-ratio:var(--paper);object-fit:contain;background:#fff;border-radius:10px;box-shadow:0 12px 40px rgba(0,27,55,.16);flex:none}
+#done{background:var(--blue-soft);flex-direction:row;gap:clamp(20px,3vw,40px);padding:clamp(16px,3vh,28px) clamp(20px,3vw,40px);align-items:center;justify-content:center}
+#sheet{height:calc(100dvh - 56px);max-width:52vw;aspect-ratio:var(--paper);object-fit:contain;background:#fff;border-radius:10px;box-shadow:0 12px 40px rgba(17,45,78,.2);flex:none}
 .panel{display:flex;flex-direction:column;gap:16px;min-width:0;max-width:480px;flex:1;background:var(--card);border-radius:28px;padding:clamp(22px,3.4vh,34px)}
 .panel h2{font-size:clamp(28px,4.6vh,36px)}
 .panel .sub{margin:-8px 0 4px;color:var(--t2);font-size:17px}
@@ -96,7 +97,7 @@ button:active{transform:scale(.97)}
 #msg:empty{display:none}
 .field{display:flex;flex-direction:column;gap:8px}
 .field span{font-size:15px;font-weight:600;color:var(--t2)}
-.field input{width:100%;font:inherit;font-size:19px;font-weight:500;color:var(--t1);background:var(--bg);border:0;border-radius:14px;padding:16px 18px;box-shadow:inset 0 0 0 2px transparent;transition:box-shadow .15s,background-color .15s;user-select:text;-webkit-user-select:text}
+.field input{width:100%;font:inherit;font-size:19px;font-weight:500;color:var(--t1);background:var(--bg);border:0;border-radius:14px;padding:16px 18px;box-shadow:inset 0 0 0 1px var(--line);transition:box-shadow .15s,background-color .15s;user-select:text;-webkit-user-select:text}
 .field input::placeholder{color:var(--t3)}
 .field input:focus{outline:0;background:#fff;box-shadow:inset 0 0 0 2px var(--blue)}
 
@@ -104,7 +105,7 @@ button:active{transform:scale(.97)}
 dialog{border:0;border-radius:28px;background:var(--card);color:var(--t1);padding:32px 28px 24px;text-align:center;width:min(92vw,440px)}
 dialog[open]{animation:up .35s var(--ease)}
 @keyframes up{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
-dialog::backdrop{background:rgba(0,0,0,.5)}
+dialog::backdrop{background:rgba(17,45,78,.55)}
 dialog h2{font-size:26px}
 #qr{width:min(52vh,300px);margin:20px auto;padding:14px;background:#fff;border-radius:20px;box-shadow:0 0 0 1px var(--line)}
 #qr svg{display:block;width:100%;height:auto}

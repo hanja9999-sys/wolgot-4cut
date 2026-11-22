@@ -14,38 +14,29 @@ const PAPER = {w: 54, h: 86};
 const px = mm => Math.round(mm * 600 / 25.4);   // 300dpi의 2배로 만들어 내려받은 사진도 선명하게
 const W = px(PAPER.w), H = px(PAPER.h), FONT = '"Poor Story",system-ui';
 
-// ── 틀: 좌표는 틀 그림의 픽셀 그대로 ──
-// slots = 왼쪽 줄 4칸(테두리 안쪽 흰 부분), dx = 오른쪽 줄까지 거리
-// msg·date = 글자 자리(x, y는 가운데. align:'left'면 x가 왼쪽 끝), w = 최대 폭. 두 줄에 똑같이 찍힌다
-// 사진관 네 컷 기본형(make_frames.py로 그림): 칸은 왼쪽 줄 기준, 오른쪽 줄은 +638
-const STRIP = {
-  slots: [360, 712, 1064, 1416].map(y => [44, y, 550, 330]), r: 22, dx: 638,
-  msg: {x: 319, y: 200, w: 420, size: 60}, date: {x: 319, y: 1890, w: 420, size: 52},
-};
+// ── 틀: 좌표는 틀 그림(1276×2031 시트)의 픽셀 그대로 ──
+// slots = 왼쪽 장 4칸(흰 부분), dx = 오른쪽 장까지 거리(시트 절반)
+// msg·date = 글자 자리(x, y는 가운데), w = 최대 폭. 두 장에 똑같이 찍힌다
+// 2026-11-22 ChatGPT로 그린 틀. 왼쪽 한 줄을 잘라 칸 기준 좌우 여백을 똑같이 맞춘 뒤 두 번 붙였다(반으로 잘라도 양옆 여백이 같다)
 const FRAMES = [
-  {id: 'ai', name: '월곶중 AI', art: 'frames/ai_wolgot.png', ink: '#1d3f8f',
-    slots: [466, 746, 1024, 1302].map(y => [105, y, 488, 250]), r: 12, dx: 595,
-    date: {x: 106, y: 1634, w: 325, size: 41, align: 'left'},
-    msg: {x: 106, y: 1687, w: 325, size: 38, align: 'left'}, msgWhere: '아래', msgDefault: '월곶중학교와 함께해요!'},
-  {id: 'black', name: '블랙 클래식', art: 'frames/black.jpg', ink: '#ffffff', ...STRIP},
-  {id: 'checker', name: '레트로 체커', art: 'frames/checker.jpg', ink: '#3b2477', ...STRIP},
-  {id: 'heart', name: '하트 반짝', art: 'frames/heart.jpg', ink: '#c2185b', ...STRIP},
-  // ChatGPT 콜라주(2026-11-11)에서 잘라 비율 그대로 넣은 틀. 문구는 위 여백, 날짜는 아래 여백
-  {id: 'comic', name: '베스트 프렌즈', art: 'frames/comic.jpg', ink: '#222222',
-    slots: [564, 810, 1054, 1295].map(y => [146, y, 406, 216]), r: 14, dx: 589,
-    msg: {x: 344, y: 180, w: 528, size: 64}, date: {x: 344, y: 1851, w: 528, size: 54}},
-  {id: 'happy', name: '해피 데이', art: 'frames/happy.jpg', ink: '#c2386e',
-    slots: [580, 816, 1047, 1281].map(y => [168, y, 373, 209]), r: 14, dx: 560,
-    msg: {x: 344, y: 190, w: 528, size: 64}, date: {x: 344, y: 1841, w: 528, size: 54}},
-  {id: 'memories', name: '굿 메모리즈', art: 'frames/memories.jpg', ink: '#5e4628',
-    slots: [565, 809, 1049, 1287].map(y => [152, y, 387, 215]), r: 14, dx: 587,
-    msg: {x: 344, y: 180, w: 528, size: 64}, date: {x: 344, y: 1851, w: 528, size: 54}},
-  {id: 'together', name: '베러 투게더', art: 'frames/together.jpg', ink: '#23356f',
-    slots: [588, 809, 1025, 1239].map(y => [171, y, 389, 192]), r: 14, dx: 584,
-    msg: {x: 344, y: 217, w: 528, size: 64}, date: {x: 344, y: 1815, w: 528, size: 54}},
-  {id: 'vibes', name: '굿 바이브', art: 'frames/vibes.jpg', ink: '#3b2477',
-    slots: [591, 809, 1025, 1238].map(y => [176, y, 365, 192]), r: 14, dx: 589,
-    msg: {x: 344, y: 218, w: 528, size: 64}, date: {x: 344, y: 1813, w: 528, size: 54}},
+  {id: 'wolgot', name: '월곶 달빛', msgDefault: '월곶중학교와 함께해요!', art: 'frames/wolgot.jpg', ink: '#112d4e', r: 18, dx: 638,
+    slots: [[42, 330, 554, 329], [42, 700, 554, 329], [42, 1070, 554, 329], [42, 1440, 554, 329]],
+    msg: {x: 319, y: 251, w: 476, size: 44}, date: {x: 319, y: 1847, w: 476, size: 40}},
+  {id: 'digital_ai', name: '디지털 AI', art: 'frames/digital_ai.jpg', ink: '#112d4e', r: 17, dx: 638,
+    slots: [[48, 330, 542, 330], [49, 692, 541, 315], [49, 1038, 541, 316], [48, 1386, 542, 327]],
+    msg: {x: 319, y: 255, w: 466, size: 48}, date: {x: 319, y: 1792, w: 466, size: 44}},
+  {id: 'film_black', name: '필름 블랙', art: 'frames/film_black.jpg', ink: '#ffffff', r: 17, dx: 638,
+    slots: [[66, 309, 507, 337], [66, 672, 507, 336], [66, 1036, 507, 336], [66, 1399, 507, 336]],
+    msg: {x: 319, y: 224, w: 436, size: 56}, date: {x: 319, y: 1813, w: 436, size: 47}},
+  {id: 'white_minimal', name: '화이트 미니멀', art: 'frames/white_minimal.jpg', ink: '#112d4e', r: 17, dx: 638,
+    slots: [[38, 319, 562, 330], [38, 682, 562, 321], [38, 1036, 562, 320], [38, 1390, 562, 324]],
+    msg: {x: 319, y: 234, w: 483, size: 48}, date: {x: 319, y: 1799, w: 483, size: 43}},
+  {id: 'hologram', name: '홀로그램', art: 'frames/hologram.jpg', ink: '#5a4a9c', r: 17, dx: 638,
+    slots: [[41, 315, 558, 336], [39, 684, 559, 319], [41, 1033, 558, 321], [39, 1386, 559, 326]],
+    msg: {x: 319, y: 214, w: 480, size: 42}, date: {x: 319, y: 1789, w: 480, size: 38}},
+  {id: 'lovely_check', name: '러블리 체크', art: 'frames/lovely_check.jpg', ink: '#b03a5b', r: 17, dx: 638,
+    slots: [[39, 319, 559, 332], [39, 683, 559, 322], [39, 1037, 559, 321], [39, 1388, 559, 325]],
+    msg: {x: 319, y: 236, w: 481, size: 42}, date: {x: 319, y: 1798, w: 481, size: 40}},
 ];
 
 const today = (() => {
