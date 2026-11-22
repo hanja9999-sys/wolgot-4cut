@@ -4,98 +4,126 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <!-- 보안: 스크립트는 이 사이트 파일만 실행하고, 사진은 QR 서버(Apps Script)로만 보낼 수 있다 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob:; media-src 'self' blob:; connect-src https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#ffffff">
 <title>靑春의 순간</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- 화면 글꼴: Pretendard. Poor Story는 인쇄되는 사진의 문구·날짜용 -->
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poor+Story&display=swap" rel="stylesheet">
-<!-- Poor Story에는 한자가 없어 제목의 靑春 두 글자만 명조로 받는다 -->
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&text=%E9%9D%91%E6%98%A5&display=swap" rel="stylesheet">
+<!-- Pretendard에는 한자가 없어 제목의 靑春 두 글자만 고딕으로 받는다 -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@800&text=%E9%9D%91%E6%98%A5&display=swap" rel="stylesheet">
 <script src="qrcode.js"></script>
 <style>
-/* 팔레트 4색은 모두 밝아서 글자·선택 표시용 --ink와 버튼 그림자용 --edge만 더했다 */
-:root{--rose:#ffced8;--blush:#ffdddd;--cream:#fff4de;--peach:#ffe8c4;--ink:#4a2a33;--edge:#e9a8b6}
+:root{
+  --blue:#3182f6;--blue-press:#1b64da;--blue-soft:#e8f3ff;
+  --bg:#f2f4f6;--card:#fff;--line:#e5e8eb;
+  --t1:#191f28;--t2:#4e5968;--t3:#8b95a1;
+  --dark:#101318;--dark2:#202632;
+  --r:20px;--ease:cubic-bezier(.2,.8,.2,1)
+}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;background:var(--cream);color:var(--ink);font-family:"Poor Story",system-ui;font-weight:400;font-style:normal;font-size:21px;line-height:1.45;overscroll-behavior:none;touch-action:manipulation;user-select:none;-webkit-user-select:none}
-h1,h2{font-weight:400;line-height:1.05;margin:0}
-h1{font-family:"Poor Story","Noto Serif KR",serif}
+html,body{margin:0;height:100%;background:var(--card);color:var(--t1);font-family:"Pretendard Variable",Pretendard,"Noto Sans KR",system-ui,sans-serif;font-size:18px;line-height:1.5;letter-spacing:-.01em;overscroll-behavior:none;touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+h1,h2{font-weight:800;letter-spacing:-.03em;line-height:1.25;margin:0}
 [hidden]{display:none!important}
-.screen{height:100dvh;display:flex;flex-direction:column;overflow:hidden}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-:focus-visible{outline:4px solid var(--ink);outline-offset:3px}
-.cta{font-size:clamp(28px,4vh,38px);line-height:1;background:var(--rose);color:var(--ink);border:3px solid var(--ink);padding:.7em 1.2em;border-radius:14px;box-shadow:0 7px 0 var(--edge);white-space:nowrap}
-.cta:active{transform:translateY(5px);box-shadow:0 2px 0 var(--edge)}
-.cta[disabled]{opacity:.55}
-.plain{background:var(--cream);color:var(--ink);border:2px solid var(--ink);font-size:24px;line-height:1;padding:.75em 1em;border-radius:12px}
-.quiet{color:var(--ink);text-decoration:underline;text-underline-offset:4px;padding:.5em .4em}
+.screen{height:100dvh;display:flex;flex-direction:column;overflow:hidden;animation:in .35s var(--ease)}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;transition:transform .15s var(--ease),background-color .15s}
+button:active{transform:scale(.97)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 
-/* 고르기: 빨랫줄에 널어 말리는 사진 */
-#choose{padding:clamp(14px,3vh,30px) 0 clamp(16px,3vh,30px)}
-#choose header{padding:0 clamp(20px,4vw,48px);display:flex;align-items:baseline;gap:.5em;flex-wrap:wrap}
-#choose h1{font-size:clamp(50px,11vh,100px)}
-#choose header p{margin:0;font-size:clamp(20px,2.8vh,26px)}
-.line{flex:1;min-height:0;position:relative;margin-top:clamp(12px,2.4vh,26px);overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 clamp(20px,4vw,48px);display:flex;gap:clamp(18px,3vw,40px)}
+/* 버튼 3단: 파랑(주) · 회색(보조) · 글자(약) */
+.cta{font-size:20px;font-weight:700;line-height:1;background:var(--blue);color:#fff;padding:20px 28px;border-radius:16px;white-space:nowrap}
+.cta:hover{background:var(--blue-press)}
+.cta[disabled]{background:#b0d1fb}
+.plain{font-size:17px;font-weight:600;line-height:1;background:var(--bg);color:var(--t2);padding:17px 18px;border-radius:14px}
+.plain:hover{background:var(--line)}
+.quiet{font-size:16px;font-weight:600;color:var(--t3);padding:12px 14px;border-radius:12px}
+.quiet:hover{background:var(--bg);color:var(--t2)}
+
+/* 고르기 */
+#choose{background:var(--card)}
+#choose header{padding:clamp(22px,5vh,48px) clamp(24px,5vw,56px) 0}
+.eyebrow{display:inline-block;font-size:15px;font-weight:700;color:var(--blue);background:var(--blue-soft);padding:6px 12px;border-radius:999px;margin-bottom:12px}
+#choose h1{font-size:clamp(34px,6.4vh,52px)}
+#choose h1 b{font-family:"Noto Sans KR","Pretendard Variable",sans-serif;font-weight:800}
+#choose header p{margin:6px 0 0;font-size:clamp(17px,2.4vh,20px);color:var(--t2)}
+.line{flex:1;min-height:0;margin-top:clamp(16px,3vh,30px);overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:6px clamp(24px,5vw,56px) 10px;display:flex;gap:clamp(14px,2vw,22px);scroll-snap-type:x proximity;scroll-padding:0 clamp(24px,5vw,56px)}
 .line::-webkit-scrollbar{display:none}
-.rope{position:absolute;left:0;top:14px;height:3px;min-width:100%;background:var(--ink);opacity:.75}
-.strip{flex:none;height:100%;padding:0;position:relative;transform-origin:50% 14px;transition:transform .25s}
-.strip:nth-of-type(odd){transform:rotate(-1.4deg)}
-.strip:nth-of-type(even){transform:rotate(1.1deg)}
-.strip canvas{display:block;height:calc(100% - 60px);width:auto;margin-top:30px;box-shadow:0 10px 22px rgba(74,42,51,.28)}
-.strip::before{content:"";position:absolute;left:50%;top:4px;width:16px;height:38px;margin-left:-8px;background:var(--rose);border:2px solid var(--ink);border-radius:3px;z-index:1}
-.strip span{display:block;font-size:clamp(17px,2.4vh,21px);line-height:30px;white-space:nowrap}
-.strip.on{transform:rotate(0) translateY(0)}
-.strip.on canvas{outline:6px solid var(--ink);outline-offset:3px}
-.strip.on span{text-decoration:underline;text-underline-offset:3px}
-.foot{padding:clamp(10px,2vh,18px) clamp(20px,4vw,48px) 8px;display:flex;align-items:center;justify-content:space-between;gap:20px}
-.foot small{font-size:18px;max-width:32em}
+.strip{flex:none;height:100%;padding:12px 12px 0;border-radius:var(--r);background:var(--bg);display:flex;flex-direction:column;align-items:center;position:relative;scroll-snap-align:start;box-shadow:inset 0 0 0 0 var(--blue);transition:box-shadow .2s var(--ease),background-color .2s,transform .15s var(--ease)}
+.strip canvas{display:block;height:calc(100% - 52px);width:auto;border-radius:8px;box-shadow:0 4px 14px rgba(0,27,55,.12)}
+.strip span{display:block;font-size:16px;font-weight:600;color:var(--t2);line-height:52px;white-space:nowrap}
+.strip.on{background:var(--blue-soft);box-shadow:inset 0 0 0 3px var(--blue)}
+.strip.on span{color:var(--blue);font-weight:700}
+.strip.on::after{content:"";position:absolute;top:20px;right:20px;width:30px;height:30px;border-radius:50%;background:var(--blue) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px no-repeat;box-shadow:0 2px 8px rgba(49,130,246,.4)}
+.foot{padding:14px clamp(24px,5vw,56px) max(18px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;gap:24px;border-top:1px solid var(--line)}
+.foot small{font-size:15px;color:var(--t3);max-width:34em;display:flex;gap:8px;align-items:flex-start}
+.foot small::before{content:"🔒";font-size:14px;line-height:1.6}
+.foot .cta{min-width:min(340px,40vw)}
 
 /* 찍기: 미리보기 비율 = 인쇄되는 칸 비율 */
-#shoot{flex-direction:row;align-items:center;justify-content:center;gap:clamp(12px,2vw,28px);padding:12px;background:var(--blush)}
+#shoot{flex-direction:row;align-items:center;justify-content:center;gap:clamp(14px,2vw,28px);padding:16px;background:var(--dark)}
 .taken{display:flex;flex-direction:column;gap:10px;flex:none}
-.taken div{width:clamp(84px,13vw,150px);aspect-ratio:var(--cell);border:3px dashed rgba(74,42,51,.5);border-radius:8px;display:grid;place-items:center;font-size:32px;overflow:hidden}
-.taken canvas{width:100%;height:100%;display:block}
-.stage{position:relative;width:min(calc(100vw - 210px),calc((100dvh - 24px)*var(--cell)));aspect-ratio:var(--cell);background:#000;border-radius:14px;overflow:hidden}
+.taken div{width:clamp(84px,13vw,150px);aspect-ratio:var(--cell);background:var(--dark2);border-radius:12px;display:grid;place-items:center;font-size:22px;font-weight:700;color:#5b6573;overflow:hidden;transition:box-shadow .2s}
+.taken div:has(canvas){box-shadow:0 0 0 2px var(--blue)}
+.taken canvas{width:100%;height:100%;display:block;animation:in .3s var(--ease)}
+.stage{position:relative;width:min(calc(100vw - 220px),calc((100dvh - 32px)*var(--cell)));aspect-ratio:var(--cell);background:#000;border-radius:24px;overflow:hidden}
 .stage video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block}
-#count{position:absolute;inset:0;display:grid;place-items:center;font-size:min(46vh,30vw);line-height:1;color:var(--cream);text-shadow:0 8px 0 rgba(74,42,51,.75)}
+#count{position:absolute;inset:0;display:grid;place-items:center;font-size:min(40vh,26vw);font-weight:800;line-height:1;color:#fff;text-shadow:0 6px 30px rgba(0,0,0,.45);font-variant-numeric:tabular-nums}
+#count:not(:empty){animation:pop 1s var(--ease)}
+@keyframes pop{from{transform:scale(1.25);opacity:.4}25%{transform:scale(1);opacity:1}}
 #flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
 #flash.go{animation:fl .35s ease-out}
 @keyframes fl{0%{opacity:1}100%{opacity:0}}
-#hint{position:absolute;left:0;right:0;bottom:14px;text-align:center;font-size:clamp(24px,3.8vh,34px);color:var(--cream);text-shadow:0 2px 6px rgba(0,0,0,.8)}
+#hint{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);font-size:clamp(18px,2.8vh,22px);font-weight:700;color:#fff;background:rgba(16,19,24,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 20px;border-radius:999px;white-space:nowrap}
+#hint:empty{display:none}
 
 /* 완성 */
-#done{background:var(--peach);flex-direction:row;gap:clamp(18px,3vw,40px);padding:clamp(12px,2.4vh,24px) clamp(16px,3vw,40px);align-items:center;justify-content:center}
-#sheet{height:calc(100dvh - 48px);max-width:52vw;aspect-ratio:var(--paper);object-fit:contain;background:#fff;box-shadow:0 14px 34px rgba(74,42,51,.3);flex:none}
-.panel{display:flex;flex-direction:column;gap:12px;min-width:0;max-width:520px;flex:1}
-.panel h2{font-size:clamp(46px,9vh,76px)}
-.panel p{margin:0}
-.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+#done{background:var(--bg);flex-direction:row;gap:clamp(20px,3vw,40px);padding:clamp(16px,3vh,28px) clamp(20px,3vw,40px);align-items:center;justify-content:center}
+#sheet{height:calc(100dvh - 56px);max-width:52vw;aspect-ratio:var(--paper);object-fit:contain;background:#fff;border-radius:10px;box-shadow:0 12px 40px rgba(0,27,55,.16);flex:none}
+.panel{display:flex;flex-direction:column;gap:16px;min-width:0;max-width:480px;flex:1;background:var(--card);border-radius:28px;padding:clamp(22px,3.4vh,34px)}
+.panel h2{font-size:clamp(28px,4.6vh,36px)}
+.panel .sub{margin:-8px 0 4px;color:var(--t2);font-size:17px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .row .cta{flex:1 1 100%}
 .row .plain{flex:1}
-#msg{min-height:1.5em}
-.field{display:flex;align-items:center;gap:10px;font-size:22px}
-.field input{flex:1;min-width:0;font:inherit;font-size:24px;color:var(--ink);background:#fff;border:2px solid var(--ink);border-radius:12px;padding:.4em .6em;user-select:text;-webkit-user-select:text}
-dialog{border:0;border-radius:18px;background:var(--cream);color:var(--ink);padding:26px 30px;text-align:center;max-width:min(92vw,520px)}
-dialog::backdrop{background:rgba(74,42,51,.72)}
-dialog h2{font-size:38px}
-#qr{width:min(62vh,360px);margin:14px auto}
+.row.links{justify-content:center;gap:4px;margin-top:-4px}
+#msg{min-height:1.5em;margin:0;font-size:16px;color:var(--blue);font-weight:600;text-align:center}
+#msg:empty{display:none}
+.field{display:flex;flex-direction:column;gap:8px}
+.field span{font-size:15px;font-weight:600;color:var(--t2)}
+.field input{width:100%;font:inherit;font-size:19px;font-weight:500;color:var(--t1);background:var(--bg);border:0;border-radius:14px;padding:16px 18px;box-shadow:inset 0 0 0 2px transparent;transition:box-shadow .15s,background-color .15s;user-select:text;-webkit-user-select:text}
+.field input::placeholder{color:var(--t3)}
+.field input:focus{outline:0;background:#fff;box-shadow:inset 0 0 0 2px var(--blue)}
+
+/* QR: 아래에서 올라오는 시트 */
+dialog{border:0;border-radius:28px;background:var(--card);color:var(--t1);padding:32px 28px 24px;text-align:center;width:min(92vw,440px)}
+dialog[open]{animation:up .35s var(--ease)}
+@keyframes up{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+dialog h2{font-size:26px}
+#qr{width:min(52vh,300px);margin:20px auto;padding:14px;background:#fff;border-radius:20px;box-shadow:0 0 0 1px var(--line)}
 #qr svg{display:block;width:100%;height:auto}
-dialog p{margin:0 0 14px;text-wrap:balance}
-dialog .plain{background:var(--rose)}
+dialog p{margin:0 0 20px;color:var(--t2);font-size:16px;text-wrap:balance}
+dialog .cta{width:100%}
+
 @media (orientation:portrait){
-  #done{flex-direction:column}
-  #sheet{height:auto;width:min(74vw,calc(48dvh*var(--paper)));max-width:none}
-  .panel{flex:none;width:100%}
-  .panel>p:not(#msg){display:none}
-    .panel h2{display:none}
+  #done{flex-direction:column;justify-content:flex-start}
+  #sheet{height:auto;width:min(70vw,calc(46dvh*var(--paper)));max-width:none}
+  .panel{flex:none;width:100%;max-width:640px}
+  .panel .sub{display:none}
   #shoot{flex-direction:column}
   .taken{flex-direction:row}
-  .taken div{width:calc((100vw - 84px)/4);max-width:150px}
-  .stage{width:min(96vw,calc((100dvh - 190px)*var(--cell)))}
+  .taken div{width:calc((100vw - 92px)/4);max-width:150px}
+  .stage{width:min(96vw,calc((100dvh - 200px)*var(--cell)))}
+  .foot{flex-direction:column;align-items:stretch;gap:12px}
+  .foot .cta{min-width:0}
 }
-@media (prefers-reduced-motion:reduce){.strip{transition:none}#flash.go{animation:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 @media print{
   html,body{background:#fff;height:auto;overflow:hidden}
   body>*:not(#print){display:none!important}
@@ -106,10 +134,14 @@ dialog .plain{background:var(--rose)}
 <body>
 
 <section id="choose" class="screen">
-  <header><h1>靑春의 순간</h1><p>마음에 드는 틀을 골라 주세요.</p></header>
-  <div class="line" id="line"><div class="rope" id="rope"></div></div>
+  <header>
+    <span class="eyebrow">월곶중 네 컷 사진</span>
+    <h1><b>靑春</b>의 순간</h1>
+    <p>마음에 드는 틀을 골라 주세요</p>
+  </header>
+  <div class="line" id="line"></div>
   <div class="foot">
-    <small>사진은 이 태블릿에 저장되지 않습니다. QR을 만들 때만 선생님 드라이브에 올라가고, 24시간 뒤 자동으로 지워집니다.</small>
+    <small>사진은 이 태블릿에 남지 않아요. QR을 만들 때만 선생님 드라이브에 올라가고, 24시간 뒤 자동으로 지워져요.</small>
     <button class="cta" id="go">이 틀로 찍기</button>
   </div>
 </section>
@@ -127,7 +159,8 @@ dialog .plain{background:var(--rose)}
 <section id="done" class="screen" hidden>
   <img id="sheet" alt="완성된 네 컷 사진">
   <div class="panel">
-    <h2>완성!</h2>
+    <h2>사진이 완성됐어요</h2>
+    <p class="sub">문구를 넣고 원하는 방법으로 받아 가세요.</p>
     <label class="field"><span id="msgWhere">위쪽 문구</span><input id="msgIn" maxlength="16" autocomplete="off" enterkeyhint="done"></label>
     <div class="row">
       <button class="cta" id="qrBtn">QR로 받기</button>
@@ -135,7 +168,7 @@ dialog .plain{background:var(--rose)}
       <button class="plain" id="saveBtn">태블릿에 저장</button>
     </div>
     <p id="msg" role="status"></p>
-    <div class="row">
+    <div class="row links">
       <button class="quiet" id="again">다시 찍기</button>
       <button class="quiet" id="home">처음으로</button>
     </div>
@@ -143,10 +176,10 @@ dialog .plain{background:var(--rose)}
 </section>
 
 <dialog id="qrBox">
-  <h2>휴대폰 카메라로 비추세요</h2>
+  <h2>휴대폰 카메라로 비춰 주세요</h2>
   <div id="qr"></div>
-  <p>사진 받기 페이지가 열립니다. 24시간 뒤에는 사진이 사라집니다.</p>
-  <button class="plain" id="qrClose">닫기</button>
+  <p>사진 받기 페이지가 열려요. 24시간 뒤에는 사진이 사라져요.</p>
+  <button class="cta" id="qrClose">닫기</button>
 </dialog>
 
 <img id="print" alt="" hidden>

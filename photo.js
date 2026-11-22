@@ -4,10 +4,10 @@ const file = `https://drive.usercontent.google.com/download?id=${id}&export=down
 const img = `https://lh3.googleusercontent.com/d/${id}=s0`;   // 원본 크기, CORS 허용
 if (!/^[\w-]{20,}$/.test(id)) {
   $('pic').hidden = $('save').hidden = true;
-  $('msg').textContent = '사진 주소가 올바르지 않습니다. QR을 다시 찍어 주세요.';
+  $('msg').textContent = '사진 주소가 올바르지 않아요. QR을 다시 찍어 주세요.';
 } else {
   $('pic').src = img;
-  $('pic').onerror = () => { $('pic').hidden = true; $('msg').textContent = '사진을 찾을 수 없습니다. 24시간이 지나 지워졌을 수 있습니다.'; };
+  $('pic').onerror = () => { $('pic').hidden = true; $('msg').textContent = '사진을 찾을 수 없어요. 24시간이 지나 지워졌을 수 있어요.'; };
   // 미리 받아 둔다: 누른 뒤에 받으면 아이폰이 공유 창을 막는다
   const ready = fetch(img).then(r => r.blob()).then(b => new File([b], `청춘의순간_${id.slice(0, 6)}.jpg`, {type: 'image/jpeg'}));
   ready.catch(() => {});

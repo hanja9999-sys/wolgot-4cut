@@ -122,7 +122,6 @@ function buildChoose() {
   const line = $('line');
   line.querySelectorAll('.strip').forEach(b => b.remove());
   FRAMES.forEach(f => line.append(frameButton(f, 'strip', true)));
-  $('rope').style.width = line.scrollWidth + 'px';
   pick(frame);
 }
 
@@ -150,7 +149,7 @@ async function shootAll() {
     stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'user', width: {ideal: 1920}, height: {ideal: 1080}}, audio: false});
   } catch (e) {
     $('go').disabled = false;
-    alert('카메라를 켤 수 없습니다. 주소창 왼쪽 아이콘에서 카메라를 허용한 뒤 다시 눌러 주세요.');
+    alert('카메라를 켤 수 없어요. 주소창 왼쪽 아이콘에서 카메라를 허용한 뒤 다시 눌러 주세요.');
     return;
   }
   shots = []; uploaded = {}; $('msgIn').value = '';
@@ -161,7 +160,7 @@ async function shootAll() {
   const v = $('cam'); v.srcObject = stream; await v.play();
   try { navigator.wakeLock && navigator.wakeLock.request('screen').catch(() => {}); } catch (e) {}
   for (let n = 0; n < 4; n++) {
-    $('hint').textContent = `${n + 1}번째 컷. 포즈!`;
+    $('hint').textContent = `${n + 1} / 4 · 포즈를 잡아 주세요`;
     for (let s = CONFIG.countdown; s > 0; s--) {
       $('count').textContent = s; beep(660, 90); await wait(1000);
       if (!stream) return;   // 촬영 중에 화면을 떠나 카메라가 꺼졌다
@@ -206,8 +205,8 @@ function bumpIdle() {
 }
 
 async function showQr() {
-  if (!CONFIG.uploadUrl) { $('msg').textContent = 'QR 서버가 아직 연결되지 않았습니다. 선생님께 알려 주세요.'; return; }
-  const btn = $('qrBtn'); btn.disabled = true; $('msg').textContent = '사진을 올리는 중입니다.';
+  if (!CONFIG.uploadUrl) { $('msg').textContent = 'QR 서버가 아직 연결되지 않았어요. 선생님께 알려 주세요.'; return; }
+  const btn = $('qrBtn'); btn.disabled = true; $('msg').textContent = '사진을 올리고 있어요…';
   const key = $('msgIn').value.trim();   // 문구가 바뀌면 다시 올린다
   try {
     if (!uploaded[key]) {
@@ -222,8 +221,8 @@ async function showQr() {
     $('qr').innerHTML = q.createSvgTag({cellSize: 6, margin: 2, scalable: true});
     $('msg').textContent = ''; $('qrBox').showModal();
   } catch (e) {
-    $('msg').textContent = e.message === 'busy' ? '사진이 한꺼번에 몰렸습니다. 1분 뒤 다시 눌러 주세요.'
-      : 'QR을 만들지 못했습니다. 인터넷 연결을 확인한 뒤 다시 눌러 주세요.';
+    $('msg').textContent = e.message === 'busy' ? '사진이 한꺼번에 몰렸어요. 1분 뒤 다시 눌러 주세요.'
+      : 'QR을 만들지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.';
   }
   btn.disabled = false;
 }
